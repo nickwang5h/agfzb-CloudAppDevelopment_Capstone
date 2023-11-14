@@ -15,7 +15,7 @@
       <div class="row">
         <div class="col-md-6 offset-md-3">
           <h2 class="text-center">Sign Up</h2>
-          <form>
+          <form action="{% url 'djangoapp:registration' %}" method="post">
             <!-- User Name -->
             <div class="form-group">
               <label for="username">User Name</label>
@@ -24,6 +24,7 @@
                 class="form-control"
                 id="username"
                 placeholder="Enter User Name"
+                required
               />
             </div>
             <!-- First Name -->
@@ -34,6 +35,7 @@
                 class="form-control"
                 id="firstname"
                 placeholder="Enter First Name"
+                required
               />
             </div>
             <!-- Last Name -->
@@ -44,6 +46,7 @@
                 class="form-control"
                 id="lastname"
                 placeholder="Enter Last Name"
+                required
               />
             </div>
             <!-- Password -->
@@ -54,9 +57,11 @@
                 class="form-control"
                 id="password"
                 placeholder="Enter Password"
+                required
               />
             </div>
             <!-- Submit Button -->
+            {% csrf_token %}
             <button type="submit" class="btn btn-primary">Sign Up</button>
           </form>
         </div>
