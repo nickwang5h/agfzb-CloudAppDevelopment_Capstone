@@ -11,7 +11,7 @@ from django.utils.timezone import now
 # - Any other fields you would like to include in car make model
 # - __str__ method to print a car make object
 class CarMake(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(null=False, max_length=64, default="Unknown")
     description = models.CharField(max_length=128)
 
     def __str__(self):
@@ -27,11 +27,11 @@ class CarMake(models.Model):
 # - Any other fields you would like to include in car model
 # - __str__ method to print a car make object
 class CarModel(models.Model):
-    car_make = models.ForeignKey(CarMake, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
     dealer_id = models.IntegerField()
     type = models.CharField(max_length=64)
-    year = models.DateField()
+    car_make = models.ForeignKey(CarMake, on_delete=models.CASCADE)
+    year = models.DateField(default=now)
 
     def __str__(self):
         return self.name
