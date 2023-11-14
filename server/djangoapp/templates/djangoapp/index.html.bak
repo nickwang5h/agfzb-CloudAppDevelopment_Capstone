@@ -16,21 +16,13 @@
     />
     <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
-    <style>
-      .navbar-custom {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .form-inline {
-        display: flex;
-        align-items: center;
-      }
-    </style>
   </head>
+
   <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-custom">
+    <!-- Remove this line the first time you edit this file -->
+    {% comment %} This is the index page of your Django app! {% endcomment %}
+    <!--Add a nav bar here -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="#">Best Cars</a>
       <button
         class="navbar-toggler"
@@ -60,44 +52,51 @@
             <a class="nav-link" href="{% url 'djangoapp:contact' %}">Contact</a>
           </li>
         </ul>
-      </div>
-
-      <!-- Login/Logout Section -->
-      <div>
-        {% if user.is_authenticated %}
-        <a class="btn btn-link" href="#"
-          >{{ user.first_name }}({{ user.username }})</a
-        >
-        <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
-        {% else %}
-        <form
-          class="form-inline"
-          action="{% url 'djangoapp:login' %}"
-          method="post"
-        >
-          {% csrf_token %}
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Username"
-            name="username"
-          />
-          <input
-            type="password"
-            class="form-control"
-            placeholder="Password"
-            name="psw"
-          />
-          <button class="btn btn-primary" type="submit">Login</button>
-          <a class="btn btn-link" href="{% url 'djangoapp:registration' %}"
-            >Sign Up</a
-          >
-        </form>
-        {% endif %}
+        <ul class="nav navbar-nav navbar-right">
+          {% if user.is_authenticated %}
+          <li>
+            <a class="btn btn-link" href="#"
+              >{{ user.first_name }}({{ user.username }})</a
+            >
+            <a class="btn btn-link" href="{% url 'djangoapp:logout' %}"
+              >Logout</a
+            >
+          </li>
+          {% else %}
+          <li>
+            <form
+              class="form-inline"
+              action="{% url 'djangoapp:login' %}"
+              method="post"
+            >
+              {% csrf_token %}
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Username"
+                  name="username"
+                />
+                <input
+                  type="password"
+                  class="form-control"
+                  placeholder="Password"
+                  name="psw"
+                />
+                <button class="btn btn-primary" type="submit">Login</button>
+                <a
+                  class="btn btn-link"
+                  href="{% url 'djangoapp:registration' %}"
+                  >Sign Up</a
+                >
+              </div>
+            </form>
+          </li>
+          {% endif %}
+        </ul>
       </div>
     </nav>
 
-    <!-- Dealer table -->
-    <!-- Your dealer table code goes here -->
+    <!--Add a dealer table here -->
   </body>
 </html>
