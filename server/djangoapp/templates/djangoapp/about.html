@@ -19,9 +19,41 @@
   </head>
   <title>About us</title>
   <body>
-    <h1>
-      Welcome to Best Cars dealership, home to the best cars in North America.
-      We sell domestic and imported cars at reasonable prices.
-    </h1>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Best Cars</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <!-- Home -->
+          <li class="nav-item active">
+            <a class="nav-link" href="#"
+              >Home <span class="sr-only">(current)</span></a
+            >
+          </li>
+          <!-- About -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'djangoapp:about' %}">About</a>
+          </li>
+          <!-- Contact -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'djangoapp:contact' %}">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+     <div class="container mt-4">
+      <h1 class="display-4">About Best Cars</h1>
+      <p class="lead">Welcome to Best Cars dealership, home to the best cars in North America. We sell domestic and imported cars at reasonable prices.</p>
+    </div> 
   </body>
 </html>
