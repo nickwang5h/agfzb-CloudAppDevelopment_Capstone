@@ -135,13 +135,13 @@ def get_dealerships(request):
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
-def get_dealer_details(request, dealer_id):
+def get_dealer_details(request, id):
     """
     Retrieves the details of a dealer and their reviews.
 
     Args:
         request: The HTTP request object.
-        dealer_id: The ID of the dealer.
+        id: The ID of the dealer.
 
     Returns:
         The rendered HTML template with the dealer details and reviews.
@@ -149,8 +149,8 @@ def get_dealer_details(request, dealer_id):
     dealer_url = "https://congwang5h-3000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
     review_url = "https://congwang5h-5000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews"
 
-    dealer = get_dealer_by_id_from_cf(dealer_url, id=dealer_id)
-    reviews = get_dealer_reviews_from_cf(review_url, dealer_id=dealer_id)
+    dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
+    reviews = get_dealer_reviews_from_cf(review_url, id=id)
 
     context = {"dealer": dealer, "reviews": reviews}
 
@@ -160,7 +160,7 @@ def get_dealer_details(request, dealer_id):
 # Create a `add_review` view to submit a review
 
 
-def add_review(request, dealer_id):
+def add_review(request, id):
     """
     Add a review for a specific dealership.
 
@@ -180,7 +180,7 @@ def add_review(request, dealer_id):
 
     # Get the dealer information
     dealer_url = "https://congwang5h-3000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
-    dealer = get_dealer_by_id_from_cf(dealer_url, id=dealer_id)
+    dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
     context["dealer"] = dealer
 
     # Handle GET request
@@ -207,8 +207,8 @@ def add_review(request, dealer_id):
 
             payload["time"] = datetime.utcnow().isoformat()
             payload["name"] = username
-            payload["dealership"] = dealer_id
-            payload["id"] = dealer_id
+            payload["dealership"] = id
+            payload["id"] = id
             payload["review"] = request.POST["content"]
             payload["purchase"] = request.POST.get("purchasecheck") == "on"
             payload["purchase_date"] = request.POST["purchasedate"]
@@ -220,7 +220,7 @@ def add_review(request, dealer_id):
             review_post_url = "https://congwang5h-5000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/post_review"
 
             # Send the review payload to the API
-            post_request(review_post_url, new_payload, id=dealer_id)
+            post_request(review_post_url, new_payload, id=id)
 
         # Redirect to the dealer details page
-        return redirect("djangoapp:dealer_details", id=dealer_id)
+        return redirect("djangoapp:dealer_details", id=id)

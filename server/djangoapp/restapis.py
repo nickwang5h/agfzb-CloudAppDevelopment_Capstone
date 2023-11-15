@@ -124,9 +124,9 @@ def analyze_review_sentiments(dealer_review):
     return label
 
 
-def get_dealer_reviews_from_cf(url, dealer_id):
+def get_dealer_reviews_from_cf(url, id):
     try:
-        reviews_data = get_request(url, params={"id": dealer_id})
+        reviews_data = get_request(url, params={"id": id})
         if reviews_data:
             dealer_reviews = []
             for review in reviews_data:
