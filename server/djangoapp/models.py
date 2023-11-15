@@ -86,7 +86,7 @@ class DealerReview:
         car_make,
         car_model,
         car_year,
-        sentiment,
+        sentiment="",
     ):
         self._id = _id
         self._rev = _rev
