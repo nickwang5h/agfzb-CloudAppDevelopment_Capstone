@@ -101,6 +101,9 @@ def get_dealer_by_id_from_cf(url, id):
     try:
         dealer_data = get_request(url, params={"id": id})
         if dealer_data:
+            # Remove any unexpected keys
+            dealer_data[0].pop("_id", None)
+            dealer_data[0].pop("_rev", None)
             return CarDealer(**dealer_data[0])
         else:
             return None
