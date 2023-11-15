@@ -53,6 +53,7 @@ class CarDealer:
         st,
         state,
         zip,
+        **kwargs
     ):
         self._id = _id
         self._rev = _rev
@@ -87,6 +88,7 @@ class DealerReview:
         car_model,
         car_year,
         sentiment="",
+        **kwargs
     ):
         self._id = _id
         self._rev = _rev
