@@ -92,8 +92,6 @@ def get_dealers_from_cf(url, **kwargs):
 # - Call get_request() with specified arguments
 # - Parse JSON results into a DealerView object list
 def get_dealer_by_id_from_cf(url, id, **kwargs):
-    result = {}
-
     res = get_request(url, id=id)
     if res:
         dealer = res[0]
@@ -109,9 +107,8 @@ def get_dealer_by_id_from_cf(url, id, **kwargs):
             st=dealer["st"],
             zip=dealer["zip"],
         )
-        result = dealer_obj
 
-    return result
+    return dealer_obj
 
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
@@ -134,3 +131,24 @@ def analyze_review_sentiments(dealer_review):
     ).get_result()
 
     return response["sentiment"]["document"]["label"]
+
+
+def get_dealer_reviews_from_cf(url, **kwargs):
+    review_id = kwargs.get("id")
+    json_result = get_request(url, id=review_id) if review_id else get_request(url)
+    results = [
+        DealerReview(
+            dealership=review.get("dealership"),
+            id=review.get("id"),
+            name=review.get("name"),
+            review=review.get("review"),
+            purchase=review.get("purchase"),
+            purchase_date=review.get("purchase_date"),
+            car_make=review.get("car_make"),
+            car_model=review.get("car_model"),
+            car_year=review.get("car_year"),
+            # sentiment=analyze_review_sentiments(review.get("review")),
+        )
+        for review in json_result
+    ]
+    return results

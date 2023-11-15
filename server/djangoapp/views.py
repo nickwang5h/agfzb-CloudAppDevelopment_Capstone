@@ -11,7 +11,7 @@ from .restapis import (
     get_request,
     post_request,
     get_dealers_from_cf,
-    # get_dealer_reviews_from_cf,
+    get_dealer_reviews_from_cf,
     get_dealer_by_id_from_cf,
 )
 from django.contrib.auth import login, logout, authenticate
@@ -103,16 +103,26 @@ def registration_request(request):
 
 def get_dealerships(request):
     if request.method == "GET":
-        context = {}
         url = "https://congwang5h-3000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
         dealerships = get_dealers_from_cf(url)
-        context["dealerships"] = dealerships
+        context = {"dealerships": dealerships}
         return render(request, "djangoapp/index.html", context)
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
-# def get_dealer_details(request, dealer_id):
-# ...
+def get_dealer_details(request, dealer_id):
+    context = {}
+
+    dealer_url = "https://congwang5h-3000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
+    dealer = get_dealer_by_id_from_cf(dealer_url, id=dealer_id)
+    context["dealer"] = dealer
+
+    review_url = "https://congwang5h-5000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews"
+    reviews = get_dealer_reviews_from_cf(review_url, id=dealer_id)
+    context["reviews"] = reviews
+
+    return render(request, "djangoapp/dealer_details.html", context)
+
 
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
