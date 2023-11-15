@@ -139,7 +139,7 @@ def analyze_review_sentiments(dealer_review):
         return "Neutral"  # Default to Neutral if analysis fails
 
 
-def get_dealer_reviews_from_cf(url, dealer_id):
+def get_dealer_reviews_from_cf(url, id):
     """
     Get reviews for a dealer from a cloud function.
 
@@ -151,7 +151,7 @@ def get_dealer_reviews_from_cf(url, dealer_id):
     - list[DealerReview]: A list of DealerReview objects.
     """
     try:
-        json_result = get_request(url, params={"dealerId": dealer_id})
+        json_result = get_request(url, params={"dealerId": id})
         if json_result:
             return [DealerReview(**review) for review in json_result]
         else:
