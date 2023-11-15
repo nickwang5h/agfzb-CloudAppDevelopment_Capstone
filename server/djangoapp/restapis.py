@@ -106,36 +106,6 @@ def get_dealer_by_id_from_cf(url, id):
         return None
 
 
-# def analyze_review_sentiments(dealer_review):
-#     """
-#     Call Watson NLU to analyze the sentiment of a dealer review.
-
-#     Args:
-#     - dealer_review (str): The review text.
-
-#     Returns:
-#     - str: The sentiment label (e.g., Positive, Negative).
-#     """
-#     try:
-#         apikey = os.environ.get("IBM_API_KEY")
-#         authenticator = IAMAuthenticator(apikey)
-#         natural_language_understanding = NaturalLanguageUnderstandingV1(
-#             version="2022-04-07", authenticator=authenticator
-#         )
-#         natural_language_understanding.set_service_url("IBM_URL")
-
-#         response = natural_language_understanding.analyze(
-#             text=dealer_review,
-#             language="en",
-#             features=Features(sentiment=SentimentOptions()),
-#         ).get_result()
-
-#         return response["sentiment"]["document"]["label"]
-#     except Exception as e:
-#         print(f"Error analyzing sentiment: {e}")
-#         return "Neutral"  # Default to Neutral if analysis fails
-
-
 def analyze_review_sentiments(dealer_review):
     url = "https://sn-watson-sentiment-bert.labs.skills.network/v1/watson.runtime.nlp.v1/NlpService/SentimentPredict"
     myobj = {"raw_document": {"text": dealer_review}}
@@ -154,27 +124,6 @@ def analyze_review_sentiments(dealer_review):
     return label
 
 
-# def get_dealer_reviews_from_cf(url, dealer_id):
-#     """
-#     Get reviews for a dealer from a cloud function.
-
-#     Args:
-#     - url (str): The URL to fetch reviews from.
-#     - dealer_id (int): The ID of the dealer.
-
-
-#     Returns:
-#     - list[DealerReview]: A list of DealerReview objects.
-#     """
-#     try:
-#         json_result = get_request(url, params={"id": dealer_id})
-#         if json_result:
-#             return [DealerReview(**review) for review in json_result]
-#         else:
-#             return []
-#     except Exception as e:
-#         print(f"Error fetching reviews: {e}")
-#         return []
 def get_dealer_reviews_from_cf(url, dealer_id):
     try:
         reviews_data = get_request(url, params={"id": dealer_id})
