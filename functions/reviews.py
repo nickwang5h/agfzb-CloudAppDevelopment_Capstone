@@ -2,11 +2,12 @@ from cloudant.client import Cloudant
 from cloudant.query import Query
 from flask import Flask, jsonify, request
 import atexit
+import os
 
 # Add your Cloudant service credentials here
-cloudant_username = ""
-cloudant_api_key = ""
-cloudant_url = ""
+cloudant_username = os.environ.get("IBM_USERNAME", None)
+cloudant_api_key = os.environ.get("IBM_API_KEY", None)
+cloudant_url = os.environ.get("IBM_URL", None)
 client = Cloudant.iam(
     cloudant_username, cloudant_api_key, connect=True, url=cloudant_url
 )
