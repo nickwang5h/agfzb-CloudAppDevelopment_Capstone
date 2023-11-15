@@ -72,7 +72,13 @@ def get_dealers_from_cf(url):
     try:
         json_result = get_request(url)
         if json_result:
-            return [CarDealer(**dealer) for dealer in json_result]
+            dealers = []
+            for dealer in json_result:
+                # Remove '_id' field if it exists in the dealer dictionary
+                dealer.pop("_id", None)
+                # Create a CarDealer instance with the modified dealer dictionary
+                dealers.append(CarDealer(**dealer))
+            return dealers
         else:
             return []
     except Exception as e:
