@@ -50,10 +50,10 @@
             <label for="car"
               ><b>Select Your Car ( Make - Model - Year ) : </b></label
             >
-            <select name="car" id="car" class="form-select" required>
+            <select name="car" class="form-select" required>
               {% for car in cars %}
               <option selected value="{{car.id}}">
-                {{car.make}} - {{car.name}} - {{car.year|date:"Y" }}
+                {{car.car_make}} - {{car.name}} - {{car.year|date:"Y" }}
               </option>
               {% endfor %}
             </select>
