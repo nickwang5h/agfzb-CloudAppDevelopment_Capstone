@@ -212,7 +212,7 @@ def add_review(request, dealer_id):
             payload["review"] = request.POST["content"]
             payload["purchase"] = request.POST.get("purchasecheck") == "on"
             payload["purchase_date"] = request.POST["purchasedate"]
-            payload["car_make"] = car.make.name
+            payload["car_make"] = car.car_make
             payload["car_model"] = car.name
             payload["car_year"] = int(car.year.strftime("%Y"))
 
