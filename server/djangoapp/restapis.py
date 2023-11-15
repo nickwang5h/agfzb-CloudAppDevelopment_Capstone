@@ -136,21 +136,42 @@ def analyze_review_sentiments(dealer_review):
         return "Neutral"  # Default to Neutral if analysis fails
 
 
+# def get_dealer_reviews_from_cf(url, dealer_id):
+#     """
+#     Get reviews for a dealer from a cloud function.
+
+#     Args:
+#     - url (str): The URL to fetch reviews from.
+#     - dealer_id (int): The ID of the dealer.
+
+
+#     Returns:
+#     - list[DealerReview]: A list of DealerReview objects.
+#     """
+#     try:
+#         json_result = get_request(url, params={"id": dealer_id})
+#         if json_result:
+#             return [DealerReview(**review) for review in json_result]
+#         else:
+#             return []
+#     except Exception as e:
+#         print(f"Error fetching reviews: {e}")
+#         return []
 def get_dealer_reviews_from_cf(url, dealer_id):
-    """
-    Get reviews for a dealer from a cloud function.
-
-    Args:
-    - url (str): The URL to fetch reviews from.
-    - dealer_id (int): The ID of the dealer.
-
-    Returns:
-    - list[DealerReview]: A list of DealerReview objects.
-    """
     try:
-        json_result = get_request(url, params={"id": dealer_id})
-        if json_result:
-            return [DealerReview(**review) for review in json_result]
+        reviews_data = get_request(url, params={"id": dealer_id})
+        if reviews_data:
+            dealer_reviews = []
+            for review in reviews_data:
+                review_obj = DealerReview(**review)
+                # Analyze the sentiment of the review
+                sentiment = analyze_review_sentiments(review_obj.review)
+                print(sentiment)  # Print the sentiment
+                review_obj.sentiment = (
+                    sentiment  # Assign sentiment to the review object
+                )
+                dealer_reviews.append(review_obj)
+            return dealer_reviews
         else:
             return []
     except Exception as e:
