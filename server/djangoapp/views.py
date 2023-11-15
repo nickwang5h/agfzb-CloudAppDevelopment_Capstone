@@ -146,28 +146,14 @@ def get_dealer_details(request, dealer_id):
     Returns:
         The rendered HTML template with the dealer details and reviews.
     """
-    # Initialize the context dictionary
-    context = {}
-
-    # API endpoint URL for retrieving dealer details
     dealer_url = "https://congwang5h-3000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
-
-    # Call the API to get the dealer details
-    dealer = get_dealer_by_id_from_cf(dealer_url, id=dealer_id)
-
-    # Add the dealer details to the context dictionary
-    context["dealer"] = dealer
-
-    # API endpoint URL for retrieving dealer reviews
     review_url = "https://congwang5h-5000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews"
 
-    # Call the API to get the dealer reviews
+    dealer = get_dealer_by_id_from_cf(dealer_url, id=dealer_id)
     reviews = get_dealer_reviews_from_cf(review_url, id=dealer_id)
 
-    # Add the dealer reviews to the context dictionary
-    context["reviews"] = reviews
+    context = {"dealer": dealer, "reviews": reviews}
 
-    # Render the HTML template with the dealer details and reviews
     return render(request, "djangoapp/dealer_details.html", context)
 
 
