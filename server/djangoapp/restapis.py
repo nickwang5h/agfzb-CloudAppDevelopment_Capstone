@@ -54,6 +54,11 @@ def get_request(url, params=None, apikey=None):
         print(f"An error occurred: {e}")
 
 
+def post_request(url, json_payload, **kwargs):
+    response = requests.post(url, params=kwargs, json=json_payload)
+    return response
+
+
 def get_dealers_from_cf(url):
     """
     Fetch dealers from a cloud function.
