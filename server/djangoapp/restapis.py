@@ -115,9 +115,9 @@ def get_dealer_by_id_from_cf(url, id, **kwargs):
 # def analyze_review_sentiments(text):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
-
-
 def analyze_review_sentiments(dealer_review):
+	apikey = ""
+    url = ""
     authenticator = IAMAuthenticator("")
     natural_language_understanding = NaturalLanguageUnderstandingV1(
         version="2022-04-07", authenticator=authenticator
