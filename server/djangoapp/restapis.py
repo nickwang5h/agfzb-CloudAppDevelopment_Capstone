@@ -151,7 +151,7 @@ def analyze_review_sentiments(dealer_review):
     elif response.status_code == 500:
         label = None
         score = None
-    return {"label": label, "score": score}
+    return label
 
 
 # def get_dealer_reviews_from_cf(url, dealer_id):

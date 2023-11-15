@@ -50,7 +50,7 @@
       <div class="card-columns">
         {% for review in reviews %}
         <div class="card">
-          {% if review.sentiment == "positive" %}
+          {% if review.sentiment == "SENT_POSITIVE" %}
           <img
             class="card-img-left"
             src="{{ MEDIA_URL }}/emoji/positive.png"
@@ -58,7 +58,7 @@
             height="36px"
             alt="Sentiment"
           />
-          {% elif review.sentiment == "neutral" %}
+          {% elif review.sentiment == "SENT_NEUTRAL" %}
           <img
             class="card-img-left"
             src="{{ MEDIA_URL }}/emoji/neutral.png"
