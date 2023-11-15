@@ -1,5 +1,6 @@
 import requests
 import json
+import os
 
 # import related models here
 from requests.auth import HTTPBasicAuth
@@ -18,8 +19,6 @@ from ibm_watson.natural_language_understanding_v1 import (
 # Create a `get_request` to make HTTP GET requests
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
 #                                     auth=HTTPBasicAuth('apikey', api_key))
-
-
 def get_request(url, **kwargs):
     try:
         apikey = kwargs.get("apikey")
@@ -116,18 +115,16 @@ def get_dealer_by_id_from_cf(url, id, **kwargs):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
 def analyze_review_sentiments(dealer_review):
-	apikey = ""
-    url = ""
+    apikey = os.environ.get("IBM_API_KEY")
     authenticator = IAMAuthenticator(apikey)
     natural_language_understanding = NaturalLanguageUnderstandingV1(
         version="2022-04-07", authenticator=authenticator
     )
     natural_language_understanding.set_service_url("")
 
+    features = Features(sentiment=SentimentOptions(targets=[dealer_review]))
     response = natural_language_understanding.analyze(
-        text=dealer_review,
-        language="en",
-        features=Features(sentiment=SentimentOptions(targets=[dealer_review])),
+        text=dealer_review, language="en", features=features
     ).get_result()
 
     return response["sentiment"]["document"]["label"]
