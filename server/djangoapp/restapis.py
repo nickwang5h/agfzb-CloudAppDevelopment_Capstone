@@ -16,136 +16,134 @@ from ibm_watson.natural_language_understanding_v1 import (
 )
 
 
-# Create a `get_request` to make HTTP GET requests
-# e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
-#                                     auth=HTTPBasicAuth('apikey', api_key))
-def get_request(url, **kwargs):
+def get_request(url, params=None, apikey=None):
+    """
+    Make an HTTP GET request to a specified URL.
+
+    Args:
+    - url (str): The URL to make the GET request to.
+    - params (dict, optional): Parameters to be sent with the request.
+    - apikey (str, optional): API key for authentication, if needed.
+
+    Returns:
+    - dict: JSON response from the request.
+    """
     try:
-        apikey = kwargs.get("apikey")
-        params = {
-            "text": kwargs.get("text"),
-            "version": kwargs.get("version"),
-            "features": kwargs.get("features"),
-            "return_analyzed_text": kwargs.get("return_analyzed_text"),
-        }
-
+        # Set headers and authentication
         headers = {"Content-Type": "application/json"}
+        auth = HTTPBasicAuth("apikey", apikey) if apikey else None
 
-        if apikey:
-            response = requests.get(
-                url,
-                params=params,
-                auth=HTTPBasicAuth("apikey", apikey),
-                headers=headers,
-            )
-        else:
-            response = requests.get(url, params=kwargs, headers=headers)
+        # Make the GET request
+        response = requests.get(url, params=params, headers=headers, auth=auth)
 
+        # Check if the response was successful
         response.raise_for_status()
-        json_data = response.json()
-        return json_data
+
+        # Return the JSON data from the response
+        return response.json()
+
+    except requests.exceptions.HTTPError as http_err:
+        print(f"HTTP error occurred: {http_err}")
+    except requests.exceptions.ConnectionError as conn_err:
+        print(f"Connection error occurred: {conn_err}")
+    except requests.exceptions.Timeout as timeout_err:
+        print(f"Timeout error occurred: {timeout_err}")
+    except requests.exceptions.RequestException as req_err:
+        print(f"Error during request: {req_err}")
     except Exception as e:
-        print(f"Error in get_request: {e}")
+        print(f"An error occurred: {e}")
 
 
-# Create a `post_request` to make HTTP POST requests
-# e.g., response = requests.post(url, params=kwargs, json=payload)
+def get_dealers_from_cf(url):
+    """
+    Fetch dealers from a cloud function.
+
+    Args:
+    - url (str): The URL to fetch dealers from.
+
+    Returns:
+    - list[CarDealer]: A list of CarDealer objects.
+    """
+    try:
+        json_result = get_request(url)
+        if json_result:
+            return [CarDealer(**dealer) for dealer in json_result]
+        else:
+            return []
+    except Exception as e:
+        print(f"Error fetching dealers: {e}")
+        return []
 
 
-def post_request(url, json_payload, **kwargs):
-    response = requests.post(url, params=kwargs, json=json_payload)
-    return response
+def get_dealer_by_id_from_cf(url, id):
+    """
+    Get a dealer by ID from a cloud function.
+
+    Args:
+    - url (str): The URL to fetch the dealer from.
+    - id (int): The ID of the dealer.
+
+    Returns:
+    - CarDealer: A CarDealer object.
+    """
+    try:
+        dealer_data = get_request(url, params={"id": id})
+        if dealer_data:
+            return CarDealer(**dealer_data[0])
+        else:
+            return None
+    except Exception as e:
+        print(f"Error fetching dealer by ID: {e}")
+        return None
 
 
-# Create a get_dealers_from_cf method to get dealers from a cloud function
-# def get_dealers_from_cf(url, **kwargs):
-# - Call get_request() with specified arguments
-# - Parse JSON results into a CarDealer object list
-def get_dealers_from_cf(url, **kwargs):
-    results = []
-    res = get_request(url)
-
-    if res:
-        dealers = res
-
-        for dealer in dealers:
-            dealer_obj = CarDealer(
-                address=dealer["address"],
-                city=dealer["city"],
-                full_name=dealer["full_name"],
-                id=dealer["id"],
-                lat=dealer["lat"],
-                long=dealer["long"],
-                short_name=dealer["short_name"],
-                state=dealer["state"],
-                st=dealer["st"],
-                zip=dealer["zip"],
-            )
-            results.append(dealer_obj)
-
-    return results
-
-
-# Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
-# def get_dealer_by_id_from_cf(url, dealerId):
-# - Call get_request() with specified arguments
-# - Parse JSON results into a DealerView object list
-def get_dealer_by_id_from_cf(url, id, **kwargs):
-    res = get_request(url, id=id)
-    if res:
-        dealer = res[0]
-        dealer_obj = CarDealer(
-            address=dealer["address"],
-            city=dealer["city"],
-            full_name=dealer["full_name"],
-            id=dealer["id"],
-            lat=dealer["lat"],
-            long=dealer["long"],
-            short_name=dealer["short_name"],
-            state=dealer["state"],
-            st=dealer["st"],
-            zip=dealer["zip"],
-        )
-
-    return dealer_obj
-
-
-# Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
-# def analyze_review_sentiments(text):
-# - Call get_request() with specified arguments
-# - Get the returned sentiment label such as Positive or Negative
 def analyze_review_sentiments(dealer_review):
-    apikey = os.environ.get("IBM_API_KEY")
-    authenticator = IAMAuthenticator(apikey)
-    natural_language_understanding = NaturalLanguageUnderstandingV1(
-        version="2022-04-07", authenticator=authenticator
-    )
-    natural_language_understanding.set_service_url("")
+    """
+    Call Watson NLU to analyze the sentiment of a dealer review.
 
-    features = Features(sentiment=SentimentOptions(targets=[dealer_review]))
-    response = natural_language_understanding.analyze(
-        text=dealer_review, language="en", features=features
-    ).get_result()
+    Args:
+    - dealer_review (str): The review text.
 
-    return response["sentiment"]["document"]["label"]
-
-
-def get_dealer_reviews_from_cf(url, **kwargs):
-    review_id = kwargs.get("id")
-    json_result = get_request(url, id=review_id) if review_id else get_request(url)
-    results = [
-        DealerReview(
-            dealership=review.get("dealership"),
-            id=review.get("id"),
-            name=review.get("name"),
-            review=review.get("review"),
-            purchase=review.get("purchase"),
-            purchase_date=review.get("purchase_date"),
-            car_make=review.get("car_make"),
-            car_model=review.get("car_model"),
-            car_year=review.get("car_year"),
-            sentiment=analyze_review_sentiments(review.get("review")),
+    Returns:
+    - str: The sentiment label (e.g., Positive, Negative).
+    """
+    try:
+        apikey = os.environ.get("IBM_API_KEY")
+        authenticator = IAMAuthenticator(apikey)
+        natural_language_understanding = NaturalLanguageUnderstandingV1(
+            version="2022-04-07", authenticator=authenticator
         )
-        for review in json_result
-    ]
-    return results
+        natural_language_understanding.set_service_url("IBM_URL")
+
+        response = natural_language_understanding.analyze(
+            text=dealer_review,
+            language="en",
+            features=Features(sentiment=SentimentOptions()),
+        ).get_result()
+
+        return response["sentiment"]["document"]["label"]
+    except Exception as e:
+        print(f"Error analyzing sentiment: {e}")
+        return "Neutral"  # Default to Neutral if analysis fails
+
+
+def get_dealer_reviews_from_cf(url, dealer_id):
+    """
+    Get reviews for a dealer from a cloud function.
+
+    Args:
+    - url (str): The URL to fetch reviews from.
+    - dealer_id (int): The ID of the dealer.
+
+    Returns:
+    - list[DealerReview]: A list of DealerReview objects.
+    """
+    try:
+        json_result = get_request(url, params={"dealerId": dealer_id})
+        if json_result:
+            return [DealerReview(**review) for review in json_result]
+        else:
+            return []
+    except Exception as e:
+        print(f"Error fetching reviews: {e}")
+        return []
