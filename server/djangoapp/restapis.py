@@ -118,7 +118,7 @@ def get_dealer_by_id_from_cf(url, id, **kwargs):
 def analyze_review_sentiments(dealer_review):
 	apikey = ""
     url = ""
-    authenticator = IAMAuthenticator("")
+    authenticator = IAMAuthenticator(apikey)
     natural_language_understanding = NaturalLanguageUnderstandingV1(
         version="2022-04-07", authenticator=authenticator
     )
@@ -147,7 +147,7 @@ def get_dealer_reviews_from_cf(url, **kwargs):
             car_make=review.get("car_make"),
             car_model=review.get("car_model"),
             car_year=review.get("car_year"),
-            # sentiment=analyze_review_sentiments(review.get("review")),
+            sentiment=analyze_review_sentiments(review.get("review")),
         )
         for review in json_result
     ]
