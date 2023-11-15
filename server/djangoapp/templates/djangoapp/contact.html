@@ -20,7 +20,7 @@
   <title>About us</title>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Best Cars</a>
+      <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Best Cars</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -36,7 +36,7 @@
         <ul class="navbar-nav">
           <!-- Home -->
           <li class="nav-item active">
-            <a class="nav-link" href="#"
+            <a class="nav-link" href="{% url 'djangoapp:index' %}"
               >Home <span class="sr-only">(current)</span></a
             >
           </li>
