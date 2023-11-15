@@ -78,7 +78,8 @@ def get_dealers_from_cf(url, **kwargs):
                 lat=dealer["lat"],
                 long=dealer["long"],
                 short_name=dealer["short_name"],
-                state=dealer["st"],
+                state=dealer["state"],
+                st=dealer["st"],
                 zip=dealer["zip"],
             )
             results.append(dealer_obj)
@@ -104,7 +105,8 @@ def get_dealer_by_id_from_cf(url, id, **kwargs):
             lat=dealer["lat"],
             long=dealer["long"],
             short_name=dealer["short_name"],
-            state=dealer["st"],
+            state=dealer["state"],
+            st=dealer["st"],
             zip=dealer["zip"],
         )
         result = dealer_obj
