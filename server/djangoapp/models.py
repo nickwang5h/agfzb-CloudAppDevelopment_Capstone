@@ -41,8 +41,6 @@ class CarModel(models.Model):
 class CarDealer:
     def __init__(
         self,
-        _id,
-        _rev,
         address,
         city,
         full_name,
@@ -55,8 +53,6 @@ class CarDealer:
         zip,
         **kwargs
     ):
-        self._id = _id
-        self._rev = _rev
         self.address = address
         self.city = city
         self.full_name = full_name
@@ -76,8 +72,6 @@ class CarDealer:
 class DealerReview:
     def __init__(
         self,
-        _id,
-        _rev,
         dealership,
         id,
         name,
@@ -90,8 +84,6 @@ class DealerReview:
         sentiment="",
         **kwargs
     ):
-        self._id = _id
-        self._rev = _rev
         self.dealership = dealership
         self.id = id
         self.name = name
