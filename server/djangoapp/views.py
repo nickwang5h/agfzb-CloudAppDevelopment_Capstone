@@ -150,7 +150,7 @@ def get_dealer_details(request, dealer_id):
     review_url = "https://congwang5h-5000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews"
 
     dealer = get_dealer_by_id_from_cf(dealer_url, id=dealer_id)
-    reviews = get_dealer_reviews_from_cf(review_url, id=dealer_id)
+    reviews = get_dealer_reviews_from_cf(review_url, dealer_id=dealer_id)
 
     context = {"dealer": dealer, "reviews": reviews}
 
